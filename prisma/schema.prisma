@@ -1,0 +1,204 @@
+// Arletos Car Service — data model
+// Prisma 7 (prisma-client generator + query compiler + driver adapter).
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Connection URL is provided via prisma.config.ts (process.env.DATABASE_URL).
+}
+
+// ── Staff accounts ────────────────────────────────────────────
+
+enum AdminRole {
+  OWNER
+  STAFF
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         AdminRole @default(STAFF)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("admin_users")
+}
+
+// ── Customers & their vehicles ────────────────────────────────
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  vehicles     Vehicle[]
+  appointments Appointment[]
+  reminders    Reminder[]
+
+  @@map("customers")
+}
+
+model Vehicle {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  make       String
+  model      String
+  year       Int?
+  plate      String?
+  vin        String?
+  mileage    Int?
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  appointments   Appointment[]
+  serviceRecords ServiceRecord[]
+  reminders      Reminder[]
+
+  @@index([customerId])
+  @@map("vehicles")
+}
+
+// ── Service catalog (public list + booking dropdown) ──────────
+
+model Service {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  approxPrice Int? // euros, whole number
+  durationMin Int?
+  active      Boolean @default(true)
+  sortOrder   Int     @default(0)
+
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+// ── Appointments ──────────────────────────────────────────────
+
+enum AppointmentStatus {
+  PENDING // web booking awaiting confirmation
+  CONFIRMED
+  IN_PROGRESS
+  WAITING_PARTS
+  DONE
+  PICKED_UP
+  CANCELLED
+}
+
+enum AppointmentSource {
+  WEB
+  PHONE
+  WALK_IN
+}
+
+model Appointment {
+  id String @id @default(cuid())
+
+  // Linked records — filled once the owner processes a web booking.
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  vehicleId  String?
+  vehicle    Vehicle?  @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  serviceId  String?
+  service    Service?  @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  // Raw details captured from the public booking form.
+  contactName  String
+  contactPhone String
+  contactEmail String?
+  vehicleInfo  String? // free text, e.g. "VW Golf 2015, ΙΝΑ-1234"
+  serviceType  String // chosen service label or free text
+  notes        String?
+
+  scheduledAt DateTime // requested date/time
+  status      AppointmentStatus @default(PENDING)
+  source      AppointmentSource @default(WEB)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  serviceRecord ServiceRecord?
+
+  @@index([scheduledAt])
+  @@index([status])
+  @@map("appointments")
+}
+
+// ── Per-vehicle service history ───────────────────────────────
+
+model ServiceRecord {
+  id            String       @id @default(cuid())
+  vehicleId     String
+  vehicle       Vehicle      @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  appointmentId String?      @unique
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  performedAt DateTime @default(now())
+  description String
+  parts       String?
+  cost        Int? // euros
+  mileage     Int?
+
+  createdAt DateTime @default(now())
+
+  @@index([vehicleId])
+  @@map("service_records")
+}
+
+// ── Reminder engine (ΚΤΕΟ / service / road-tax / tyres) ────────
+
+enum ReminderType {
+  SERVICE_DUE
+  KTEO // τεχνικός έλεγχος
+  ROAD_TAX // τέλη κυκλοφορίας
+  TYRE_CHANGE
+  CUSTOM
+}
+
+enum ReminderChannel {
+  SMS
+  VIBER
+  EMAIL
+}
+
+enum ReminderStatus {
+  SCHEDULED
+  SENT
+  DISMISSED
+}
+
+model Reminder {
+  id         String    @id @default(cuid())
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  vehicleId  String?
+  vehicle    Vehicle?  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  type    ReminderType
+  dueDate DateTime
+  channel ReminderChannel @default(SMS)
+  status  ReminderStatus  @default(SCHEDULED)
+  message String?
+  sentAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dueDate])
+  @@index([status])
+  @@map("reminders")
+}
