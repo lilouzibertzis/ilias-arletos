@@ -8,6 +8,8 @@ import {
   REMINDER_STATUS_LABELS,
   cn,
 } from "@/lib/format";
+import { ReminderTester } from "./ReminderTester";
+import { sendReminderNow } from "./actions";
 
 export const metadata = { title: "Υπενθυμίσεις" };
 
@@ -31,6 +33,8 @@ export default async function RemindersPage() {
           SMS/Viber προς τους πελάτες.
         </p>
       </div>
+
+      <ReminderTester />
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {reminders.length === 0 ? (
@@ -78,6 +82,19 @@ export default async function RemindersPage() {
                           : `εκπρόθεσμο · ${REMINDER_CHANNEL_LABELS[r.channel]}`
                         : REMINDER_STATUS_LABELS[r.status]}
                     </p>
+                    {r.status === "SCHEDULED" && r.customer?.phone ? (
+                      <form action={sendReminderNow} className="mt-1">
+                        <input type="hidden" name="id" value={r.id} />
+                        <button
+                          type="submit"
+                          className="text-xs font-semibold text-brand-700 hover:underline"
+                        >
+                          Αποστολή τώρα →
+                        </button>
+                      </form>
+                    ) : r.status === "SENT" ? (
+                      <p className="mt-1 text-xs font-medium text-emerald-600">Στάλθηκε ✓</p>
+                    ) : null}
                   </div>
                 </li>
               );
