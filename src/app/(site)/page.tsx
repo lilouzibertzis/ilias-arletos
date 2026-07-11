@@ -175,6 +175,23 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Online service book CTA ── */}
+      <section className="bg-brand-700 py-14 text-white">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center sm:px-6">
+          <h2 className="text-2xl font-bold">Εξυπηρετηθήκατε εδώ;</h2>
+          <p className="max-w-xl text-brand-50/90">
+            Δείτε online το βιβλίο service και την κατάσταση της επισκευής του
+            οχήματός σας — απλά με την πινακίδα σας.
+          </p>
+          <Link
+            href="/service-book"
+            className="rounded-full bg-white px-6 py-3 font-semibold text-brand-700 transition-colors hover:bg-brand-50"
+          >
+            Δείτε το όχημά μου →
+          </Link>
+        </div>
+      </section>
+
       {/* ── Contact ── */}
       <section id="contact" className="bg-slate-50 py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-2">

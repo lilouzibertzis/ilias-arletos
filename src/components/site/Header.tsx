@@ -8,7 +8,7 @@ import { SHOP } from "@/lib/site";
 const NAV = [
   { href: "/#services", label: "Υπηρεσίες" },
   { href: "/#why", label: "Γιατί εμείς" },
-  { href: "/#how", label: "Πώς λειτουργεί" },
+  { href: "/service-book", label: "Το όχημά μου" },
   { href: "/#contact", label: "Επικοινωνία" },
 ];
 

@@ -66,9 +66,24 @@ model Vehicle {
   appointments   Appointment[]
   serviceRecords ServiceRecord[]
   reminders      Reminder[]
+  photos         VehiclePhoto[]
 
   @@index([customerId])
   @@map("vehicles")
+}
+
+// Photos of the physical service book, attached to a vehicle.
+model VehiclePhoto {
+  id        String   @id @default(cuid())
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  data      Bytes
+  mimeType  String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  @@index([vehicleId])
+  @@map("vehicle_photos")
 }
 
 // ── Service catalog (public list + booking dropdown) ──────────

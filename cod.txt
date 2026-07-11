@@ -1,0 +1,2 @@
+user: admin@arletos.gr
+pass: arletos123

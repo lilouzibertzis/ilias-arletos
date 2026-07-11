@@ -19,6 +19,9 @@ import {
   REMINDER_CHANNEL_LABELS,
   cn,
 } from "@/lib/format";
+import { AddVehicleForm } from "../AddVehicleForm";
+import { AddServiceRecordForm } from "../AddServiceRecordForm";
+import { ServiceBookPhotos } from "../ServiceBookPhotos";
 
 export default async function CustomerDetailPage({
   params,
@@ -31,7 +34,10 @@ export default async function CustomerDetailPage({
     include: {
       vehicles: {
         orderBy: { createdAt: "desc" },
-        include: { serviceRecords: { orderBy: { performedAt: "desc" } } },
+        include: {
+          serviceRecords: { orderBy: { performedAt: "desc" } },
+          photos: { select: { id: true, caption: true }, orderBy: { createdAt: "desc" } },
+        },
       },
       appointments: { orderBy: { scheduledAt: "desc" }, take: 10 },
       reminders: { orderBy: { dueDate: "asc" } },
@@ -74,66 +80,75 @@ export default async function CustomerDetailPage({
           <TruckIcon className="h-5 w-5 text-brand-600" />
           Οχήματα ({customer.vehicles.length})
         </h2>
-        {customer.vehicles.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-slate-300 px-5 py-8 text-center text-sm text-slate-400">
-            Δεν υπάρχουν καταχωρημένα οχήματα.
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {customer.vehicles.map((v) => (
-              <div key={v.id} className="rounded-2xl border border-slate-200 bg-white p-6">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="font-semibold text-slate-900">
-                    {v.make} {v.model}
-                    {v.year ? ` (${v.year})` : ""}
-                  </h3>
-                  <div className="flex gap-2 text-xs">
-                    {v.plate && (
-                      <span className="rounded bg-slate-100 px-2 py-1 font-medium text-slate-700">
-                        {v.plate}
-                      </span>
-                    )}
-                    {v.mileage != null && (
-                      <span className="rounded bg-slate-100 px-2 py-1 font-medium text-slate-700">
-                        {v.mileage.toLocaleString("el-GR")} χλμ
-                      </span>
-                    )}
-                  </div>
-                </div>
+        <div className="space-y-4">
+          {customer.vehicles.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-slate-300 px-5 py-6 text-center text-sm text-slate-400">
+              Δεν υπάρχουν καταχωρημένα οχήματα ακόμη.
+            </p>
+          )}
 
-                <div className="mt-4">
-                  <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-slate-400">
-                    <WrenchScrewdriverIcon className="h-4 w-4" />
-                    Ιστορικό εργασιών
-                  </p>
-                  {v.serviceRecords.length === 0 ? (
-                    <p className="mt-2 text-sm text-slate-400">Καμία καταχώρηση ακόμη.</p>
-                  ) : (
-                    <ul className="mt-2 divide-y divide-slate-100">
-                      {v.serviceRecords.map((r) => (
-                        <li key={r.id} className="flex items-start justify-between gap-4 py-3">
-                          <div>
-                            <p className="text-sm font-medium text-slate-800">{r.description}</p>
-                            {r.parts && <p className="text-xs text-slate-500">{r.parts}</p>}
-                            <p className="mt-0.5 text-xs text-slate-400">
-                              {formatDate(r.performedAt)}
-                              {r.mileage != null
-                                ? ` · ${r.mileage.toLocaleString("el-GR")} χλμ`
-                                : ""}
-                            </p>
-                          </div>
-                          <span className="shrink-0 text-sm font-semibold text-slate-700">
-                            {formatEuro(r.cost)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+          {customer.vehicles.map((v) => (
+            <div key={v.id} className="rounded-2xl border border-slate-200 bg-white p-6">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-semibold text-slate-900">
+                  {v.make} {v.model}
+                  {v.year ? ` (${v.year})` : ""}
+                </h3>
+                <div className="flex gap-2 text-xs">
+                  {v.plate && (
+                    <span className="rounded bg-slate-100 px-2 py-1 font-medium text-slate-700">
+                      {v.plate}
+                    </span>
+                  )}
+                  {v.mileage != null && (
+                    <span className="rounded bg-slate-100 px-2 py-1 font-medium text-slate-700">
+                      {v.mileage.toLocaleString("el-GR")} χλμ
+                    </span>
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+
+              <div className="mt-4">
+                <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-slate-400">
+                  <WrenchScrewdriverIcon className="h-4 w-4" />
+                  Ιστορικό εργασιών
+                </p>
+                {v.serviceRecords.length === 0 ? (
+                  <p className="mt-2 text-sm text-slate-400">Καμία καταχώρηση ακόμη.</p>
+                ) : (
+                  <ul className="mt-2 divide-y divide-slate-100">
+                    {v.serviceRecords.map((r) => (
+                      <li key={r.id} className="flex items-start justify-between gap-4 py-3">
+                        <div>
+                          <p className="text-sm font-medium text-slate-800">{r.description}</p>
+                          {r.parts && <p className="text-xs text-slate-500">{r.parts}</p>}
+                          <p className="mt-0.5 text-xs text-slate-400">
+                            {formatDate(r.performedAt)}
+                            {r.mileage != null
+                              ? ` · ${r.mileage.toLocaleString("el-GR")} χλμ`
+                              : ""}
+                          </p>
+                        </div>
+                        <span className="shrink-0 text-sm font-semibold text-slate-700">
+                          {formatEuro(r.cost)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <AddServiceRecordForm vehicleId={v.id} customerId={customer.id} />
+              </div>
+
+              <ServiceBookPhotos
+                vehicleId={v.id}
+                customerId={customer.id}
+                photos={v.photos}
+              />
+            </div>
+          ))}
+
+          <AddVehicleForm customerId={customer.id} />
+        </div>
       </section>
 
       {/* Reminders */}
