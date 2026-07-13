@@ -23,7 +23,7 @@ export async function addVehicle(_prev: FormResult, formData: FormData): Promise
   if (!customerId) return { ok: false, error: "Λείπει ο πελάτης." };
   if (!make || !model) return { ok: false, error: "Συμπληρώστε μάρκα και μοντέλο." };
 
-  await prisma.vehicle.create({
+  const vehicle = await prisma.vehicle.create({
     data: {
       customerId,
       make,
@@ -34,6 +34,20 @@ export async function addVehicle(_prev: FormResult, formData: FormData): Promise
       mileage: intOrNull(formData.get("mileage")),
     },
   });
+
+  // If this is the customer's only car, auto-link their open appointments to it
+  // so the status shows on the customer's online service book.
+  const vehicleCount = await prisma.vehicle.count({ where: { customerId } });
+  if (vehicleCount === 1) {
+    await prisma.appointment.updateMany({
+      where: {
+        customerId,
+        vehicleId: null,
+        status: { notIn: ["PICKED_UP", "CANCELLED"] },
+      },
+      data: { vehicleId: vehicle.id },
+    });
+  }
 
   revalidatePath(`/admin/customers/${customerId}`);
   return { ok: true };

@@ -61,3 +61,27 @@ export async function convertToCustomer(formData: FormData) {
   revalidatePath(`/admin/appointments/${id}`);
   redirect(`/admin/customers/${customer.id}`);
 }
+
+/** Link an appointment to a specific vehicle (also links the vehicle's owner). */
+export async function setAppointmentVehicle(formData: FormData) {
+  await verifySession();
+  const id = String(formData.get("id") ?? "");
+  const vehicleId = String(formData.get("vehicleId") ?? "");
+  if (!id) return;
+
+  if (!vehicleId) {
+    await prisma.appointment.update({ where: { id }, data: { vehicleId: null } });
+  } else {
+    const vehicle = await prisma.vehicle.findUnique({
+      where: { id: vehicleId },
+      select: { customerId: true },
+    });
+    await prisma.appointment.update({
+      where: { id },
+      data: { vehicleId, customerId: vehicle?.customerId ?? undefined },
+    });
+  }
+
+  revalidatePath(`/admin/appointments/${id}`);
+  revalidatePath("/admin/appointments");
+}
