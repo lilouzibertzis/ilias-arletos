@@ -20,7 +20,7 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-lg font-black text-white">
-            Α
+            Ο
           </span>
           <span className="leading-tight">
             <span className="block text-base font-extrabold tracking-tight text-brand-800">

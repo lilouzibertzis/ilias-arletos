@@ -32,10 +32,10 @@ export function Sidebar({ admin }: { admin: { name: string; role: string } }) {
   const brand = (
     <div className="flex items-center gap-2.5 px-5 py-4">
       <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-lg font-black text-white">
-        Α
+        Ο
       </span>
       <div className="leading-tight">
-        <span className="block text-sm font-bold text-white">Άρλετος Ηλίας</span>
+        <span className="block text-sm font-bold text-white">Όνομα Επιχείρησης</span>
         <span className="block text-[11px] uppercase tracking-wide text-slate-400">
           Διαχείριση
         </span>
@@ -100,7 +100,7 @@ export function Sidebar({ admin }: { admin: { name: string; role: string } }) {
       <div className="sticky top-0 z-40 flex items-center justify-between bg-slate-900 px-4 py-3 md:hidden">
         <div className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-base font-black text-white">
-            Α
+            Ο
           </span>
           <span className="text-sm font-bold text-white">Διαχείριση</span>
         </div>

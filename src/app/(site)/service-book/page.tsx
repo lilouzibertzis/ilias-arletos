@@ -14,7 +14,7 @@ import type { AppointmentStatus } from "@/generated/prisma/enums";
 export const metadata: Metadata = {
   title: "Το όχημά μου",
   description:
-    "Δείτε online το ιστορικό service και την κατάσταση του οχήματός σας στο συνεργείο Άρλετος Ηλίας — απλά με την πινακίδα σας.",
+    "Δείτε online το ιστορικό service και την κατάσταση του οχήματός σας στο συνεργείο Όνομα Επιχείρησης — απλά με την πινακίδα σας.",
 };
 
 // Greek plate letters share glyphs with Latin ones — normalize both to Latin

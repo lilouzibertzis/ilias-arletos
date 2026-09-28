@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: `%s | ${SHOP.name}`,
   },
   description:
-    "Bosch Car Service στα Ιωάννινα. Κλείστε online ραντεβού για service, φρένα, λάδια, ΚΤΕΟ και διάγνωση βλαβών. 3ης Σεπτεμβρίου 30, Ανατολή.",
+    "Bosch Car Service στην πόλη σας. Κλείστε online ραντεβού για service, φρένα, λάδια, ΚΤΕΟ και διάγνωση βλαβών.",
 };
 
 export default function RootLayout({

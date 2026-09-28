@@ -65,7 +65,7 @@ export default function HomePage() {
               <span className="text-white/80">από {SHOP.reviews} κριτικές στο Google</span>
             </span>
             <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-              Το συνεργείο εμπιστοσύνης στα Ιωάννινα
+              Το συνεργείο εμπιστοσύνης στην πόλη σας
             </h1>
             <p className="mt-5 max-w-xl text-lg text-brand-50/90">
               Service, φρένα, λάδια, διάγνωση βλαβών και προετοιμασία ΚΤΕΟ για κάθε
@@ -198,7 +198,7 @@ export default function HomePage() {
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">Πού θα μας βρείτε</h2>
             <p className="mt-3 text-slate-600">
-              Βρισκόμαστε στην Ανατολή Ιωαννίνων. Περάστε ή κλείστε ραντεβού για να σας εξυπηρετήσουμε άμεσα.
+              Βρισκόμαστε στην πόλη σας. Περάστε ή κλείστε ραντεβού για να σας εξυπηρετήσουμε άμεσα.
             </p>
             <ul className="mt-6 space-y-4 text-slate-700">
               <li className="flex items-start gap-3">

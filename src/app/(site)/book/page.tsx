@@ -6,7 +6,7 @@ import { SHOP } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Κλείστε ραντεβού",
   description:
-    "Κλείστε online ραντεβού στο συνεργείο Άρλετος Ηλίας στα Ιωάννινα — service, φρένα, λάδια, ΚΤΕΟ και διάγνωση βλαβών.",
+    "Κλείστε online ραντεβού στο συνεργείο Όνομα Επιχείρησης στην πόλη σας — service, φρένα, λάδια, ΚΤΕΟ και διάγνωση βλαβών.",
 };
 
 export default function BookPage() {

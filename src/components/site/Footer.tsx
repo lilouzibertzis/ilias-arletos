@@ -9,7 +9,7 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-lg font-black text-white">
-              Α
+              Ο
             </span>
             <span className="leading-tight">
               <span className="block text-base font-extrabold text-brand-800">
@@ -21,7 +21,7 @@ export function Footer() {
             </span>
           </div>
           <p className="mt-4 max-w-xs text-sm text-slate-600">
-            Το συνεργείο εμπιστοσύνης στα Ιωάννινα για κάθε μάρκα αυτοκινήτου.
+            Το συνεργείο εμπιστοσύνης στην πόλη σας για κάθε μάρκα αυτοκινήτου.
           </p>
         </div>
 
